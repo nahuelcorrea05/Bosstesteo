@@ -4,8 +4,12 @@ from datetime import datetime, timedelta
 import asyncio
 import json
 import os
+from dotenv import load_dotenv
 
-TOKEN = ""
+# Cargar variables de entorno
+load_dotenv()
+
+TOKEN = os.getenv("DISCORD_TOKEN")
 
 intents = discord.Intents.default()
 intents.message_content = True
