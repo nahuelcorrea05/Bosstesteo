@@ -423,8 +423,8 @@ async def ping(ctx):
         print(f"❌ Error en !ping: {e}")
         await ctx.send(f"❌ Error: {str(e)}")
 
-@bot.command(name="help", aliases=["h", "?"])
-async def help_command(ctx):
+@bot.command(name="commands", aliases=["cmds", "c"])
+async def commands_list(ctx):
     """Ver todos los comandos"""
     try:
         embed = discord.Embed(
@@ -439,7 +439,7 @@ async def help_command(ctx):
             ("!info NombreBoss", "Info detallada del boss"),
             ("!img NombreBoss URL", "Agregar/actualizar imagen"),
             ("!ping", "Ver latencia del bot"),
-            ("!help", "Ver este mensaje"),
+            ("!commands / !cmds / !c", "Ver este mensaje"),
         ]
         
         for cmd, desc in commands_info:
@@ -447,7 +447,7 @@ async def help_command(ctx):
         
         await ctx.send(embed=embed)
     except Exception as e:
-        print(f"❌ Error en !help: {e}")
+        print(f"❌ Error en !commands: {e}")
         await ctx.send(f"❌ Error: {str(e)}")
 
 # =========================
