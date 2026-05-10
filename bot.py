@@ -5,11 +5,14 @@ import asyncio
 import json
 import os
 from dotenv import load_dotenv
+from flask import Flask
+from threading import Thread
 
 # Cargar variables de entorno
 load_dotenv()
 
 TOKEN = os.getenv("DISCORD_TOKEN")
+PORT = int(os.getenv("PORT", 10000))
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -18,6 +21,23 @@ bot = commands.Bot(
     command_prefix="!",
     intents=intents
 )
+
+# =========================
+# FLASK WEB SERVER
+# =========================
+
+app = Flask(__name__)
+
+@app.route('/')
+def home():
+    return {"status": "Bot Discord activo", "timestamp": datetime.now().isoformat()}, 200
+
+@app.route('/health')
+def health():
+    return {"status": "ok"}, 200
+
+def run_flask():
+    app.run(host='0.0.0.0', port=PORT, debug=False)
 
 # =========================
 # DATOS
@@ -298,7 +318,13 @@ async def ping(ctx):
     await ctx.send("pong")
 
 # =========================
-# INICIAR BOT
+# INICIAR BOT + SERVIDOR WEB
 # =========================
 
-bot.run(TOKEN)
+if __name__ == "__main__":
+    # Iniciar servidor Flask en un thread separado
+    flask_thread = Thread(target=run_flask, daemon=True)
+    flask_thread.start()
+    
+    # Iniciar bot Discord en el thread principal
+    bot.run(TOKEN)
